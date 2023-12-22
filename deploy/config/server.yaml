@@ -1,0 +1,47 @@
+install:
+  device: "/dev/sda"
+  reboot: true
+  auto: true
+
+stages:
+  initramfs:
+  - name: "Setup hostname"
+    hostname: "kairos-server"
+  - name: "add users"
+    users:
+      kairos:
+        passwd: "kairos"
+        groups:
+        - "admin"
+      deploy:
+        passwd: "deploy"
+        groups:
+        - "admin"
+
+  network:
+  - name: "Setup users"
+    authorized_keys:
+      kairos:
+      - github:zerodeth
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDXAUt7CSMBlkCuuW5lNFYp3EK7Dhgeur375/K0esAHqD92kQ6XBSyFBWVCbDSMAUPSUrEvZu8HZyVejvL8LHirhyBFthXp5PJHljNy3Kv1cSXdMiHOcUftGywPSsz4v0I7s68yI074b/p4/QWl7I5hcIbwnetkZHGBb9l3L0vQ7SnEFy8T8pfEGTquCzU8a5b/bjg0OM2M/R3RX398+TVqX+HBWruSViKnXq1FQ6BKLx3M1gv9sKbUmPq56fTkB8evjwYg40JsizRXjZl+baHPLd2sieaL3HAj3shNTnvawwmFXQUJB+OucgQtCobt0s1CPHbg2Ty68lfIymek/J2ldzEmD9U+Z5tMG8UK2UifvT1zi+N/KIgkIAPBaXOvMgoWoxSMyei///6qxPVQ8I+zCn59323tpzyFxFF6Kv00zAU6ni8LZcHkpSR+fpqGLuKJmvezydeesADrBMNLId+uoUiZ4daa6yG4nj+/tjXAqmnRLyzYG5FHBn2oRlVSxdqYJY1MsdbmPGKy/Ko7LU7t7wgFESChY0lsn2WCyPxDzMDl1N9wHfgn07bhLomyePvLoJSAuUuZ3No8fNyOD+ogdcMjUz6/4yRpTc9h7qoNQYBBWsj7cMoQH2rsQOG8Wn1P4H5vwcxN1MoZhJphVTkREvj0aUWGL9/Wky09rolwIw== ZeroDeth"
+      deploy:
+      - github:zerodeth
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDXAUt7CSMBlkCuuW5lNFYp3EK7Dhgeur375/K0esAHqD92kQ6XBSyFBWVCbDSMAUPSUrEvZu8HZyVejvL8LHirhyBFthXp5PJHljNy3Kv1cSXdMiHOcUftGywPSsz4v0I7s68yI074b/p4/QWl7I5hcIbwnetkZHGBb9l3L0vQ7SnEFy8T8pfEGTquCzU8a5b/bjg0OM2M/R3RX398+TVqX+HBWruSViKnXq1FQ6BKLx3M1gv9sKbUmPq56fTkB8evjwYg40JsizRXjZl+baHPLd2sieaL3HAj3shNTnvawwmFXQUJB+OucgQtCobt0s1CPHbg2Ty68lfIymek/J2ldzEmD9U+Z5tMG8UK2UifvT1zi+N/KIgkIAPBaXOvMgoWoxSMyei///6qxPVQ8I+zCn59323tpzyFxFF6Kv00zAU6ni8LZcHkpSR+fpqGLuKJmvezydeesADrBMNLId+uoUiZ4daa6yG4nj+/tjXAqmnRLyzYG5FHBn2oRlVSxdqYJY1MsdbmPGKy/Ko7LU7t7wgFESChY0lsn2WCyPxDzMDl1N9wHfgn07bhLomyePvLoJSAuUuZ3No8fNyOD+ogdcMjUz6/4yRpTc9h7qoNQYBBWsj7cMoQH2rsQOG8Wn1P4H5vwcxN1MoZhJphVTkREvj0aUWGL9/Wky09rolwIw== ZeroDeth"
+
+kairos:
+  network_token: b3RwOgogIGRodDoKICAgIGludGVydmFsOiA5MjIzMzcyMDM2ODU0Nzc1ODA3CiAgICBrZXk6IElaMzZMRkoyT05BTlpJUTdNSVQ2RjVHSExHRFBIN1VTN1hQV01PSUMyWkRVVUI3N0hEMkEKICAgIGxlbmd0aDogMzIKICBjcnlwdG86CiAgICBpbnRlcnZhbDogOTIyMzM3MjAzNjg1NDc3NTgwNwogICAga2V5OiBZNVZPQk5UTVFDNVdHV0dUWVNITVk3T1VFS0pXNUpDN1BVVTVCUjZEUzZMVEM2UzVCNE9RCiAgICBsZW5ndGg6IDMyCnJvb206IFZGT0tFU05NQklESFlMSlZUU0NVWU1EUzVIWlNYRkxEUjVCM1BFQjUzN1lPSllRUFlUNVEKcmVuZGV6dm91czogSkFqeFZOV09vRFF1dWNuem1CaGVWZ3BnQm9PeXlPbHMKbWRuczogSU96d2VERVJaTEhtR2ZhYXd1YWhVc3doQ2tzZWdvWnkKbWF4X21lc3NhZ2Vfc2l6ZTogMjA5NzE1MjAK
+  role: "master"
+
+vpn:
+  # EdgeVPN environment options
+  DHCP: "false"
+  ADDRESS: "10.159.0.2/24"
+
+k3s:
+  enabled: true
+  args:
+  - "--disable"
+  - "servicelb"
+  env:
+    K3S_TOKEN: "K10a05b5614d85d6c6a4b0e822d097eda20419990df3c4e66a13b728d9365eb729e::server:41bf95119febf44a3fa8a1c59eafd013"
+
