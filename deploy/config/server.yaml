@@ -33,9 +33,9 @@ kairos:
   role: "master"
 
 vpn:
-  # EdgeVPN environment options
-  DHCP: "false"
-  ADDRESS: "10.159.0.2/24"
+  # EdgeVPN environment options TODO: Revert
+  DHCP: "true"
+  ADDRESS: "192.168.1.0/24"
 
 k3s:
   enabled: true
